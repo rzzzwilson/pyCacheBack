@@ -1,42 +1,23 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 """
 An extended dictionary offering limited LRU entries in the dictionary
 and an interface to an unlimited backing store.
 
-https://code.google.com/p/rzzzwilson/wiki/pyCacheBack
-"""
-
-__license__ = """
-Copyright (C) 2012 rzzzwilson@gmail.com
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+https://github.com/rzzzwilson/pyCacheBack
 """
 
 
 class pyCacheBack(dict):
-    """Extend the dictionary class to become an LRU dictionary with a limited
-    number of dictionary keys, fronting for a unlimited backing store."""
+    """An LRU in-memory store fronting an unlimited on-disk store."""
 
-    # maximum number of key/value pairs for pyCacheBack
-    maxLRU = 1000
+    # default maximum number of key/value pairs for pyCacheBack
+    DefaultMaxLRU = 1000
 
     def __init__(self, *args, **kwargs):
         self._lru_list = []
-        self._max_lru = kwargs.pop('max_lru', self.maxLRU)
+        self._max_lru = kwargs.pop('max_lru', self.DefaultMaxLRU)
         super(pyCacheBack, self).__init__(*args, **kwargs)
 
     def __getitem__(self, key):
