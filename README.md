@@ -65,10 +65,11 @@ test_dir = './test_dir'
             return value
 ```
 
-Note that if any translation of an object is required before writing to disk
-the `_put_to_back()` method must do this.
+Note that the in-memory representation of the thing we are caching may not be
+writable to disk in the in-memory form.  If any translation of an object is
+required before writing to disk the `_put_to_back()` method must do this.
 Similarly, the `_get_from_back()` method must reconstruct the in-memory
-representation.
+representation from the on-disk data.
 
 In a real zoomable tiled map display we would actually have a key that also
 contains the zoom level.  We leave this out in the code above so the example
