@@ -82,3 +82,7 @@ method of *aging* tiles so we pick up OSM tiles that might have changed.
 This could be an external batch process which might just delete older tiles
 in the on-disk cache, or it could check for changes in the OSM tile repository
 and update or delete only out of date local tiles.
+
+Similarly, if we want an on-disk LRU mechanism to control disk usage we
+could have a periodic batch job checking disk usage which deletes older on-disk
+tiles.
