@@ -10,14 +10,18 @@ https://github.com/rzzzwilson/pyCacheBack
 
 
 class pyCacheBack(dict):
-    """An LRU in-memory store fronting an unlimited on-disk store."""
+    """An LRU limited in-memory store fronting an unlimited on-disk store."""
 
     # default maximum number of key/value pairs for pyCacheBack
     DefaultMaxLRU = 1000
 
+    # default path to tiles directory
+    DefaultTilesDir = 'tiles'
+
     def __init__(self, *args, **kwargs):
         self._lru_list = []
         self._max_lru = kwargs.pop('max_lru', self.DefaultMaxLRU)
+        self._tiles_dir = kwargs.pop('tiles_dir', self.DefaultTilesDir)
         super(pyCacheBack, self).__init__(*args, **kwargs)
 
     def __getitem__(self, key):
