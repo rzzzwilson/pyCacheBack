@@ -14,7 +14,7 @@ in-memory cache has an LRU mechanism but the on-disk cache is infinite.
 ###Using `pyCacheBack`
 
 To use just the in-memory cache part of `pyCacheBack`, do this:
-```
+``` python
     import pycacheback
     my_cache = pycacheback.pyCacheBack()
 
