@@ -73,7 +73,7 @@ representation from the on-disk data.
 
 In a real zoomable tiled map display we would actually have a key that also
 contains the zoom level.  We leave this out in the code above so the example
-is simple.  It's not hard to add into the above code.
+is simple.
 
 ###Notes
 
