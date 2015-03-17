@@ -15,12 +15,12 @@ in-memory cache has an LRU mechanism but the on-disk cache is infinite.
 
 To use just the in-memory cache part of `pyCacheBack`, do this:
 ``` python
-    import pycacheback
-    my_cache = pycacheback.pyCacheBack()
+import pycacheback
+my_cache = pycacheback.pyCacheBack()
 
-    my_cache['key'] = 'value'
-    my_value = my_cache['key']
-    # etc
+my_cache['key'] = 'value'
+my_value = my_cache['key']
+# etc
 ```
 
 Note that no backing store is used in the above example, it's just an in-memory
@@ -36,37 +36,37 @@ The overridden methods must create the backing file from the _key_ and _value_
 objects and return the _value_ given the _key_:
 
 ``` python
-    from pycacheback import pyCacheBack
+from pycacheback import pyCacheBack
 
-    test_dir = './test_dir'
+test_dir = './test_dir'
 
-    # override the backing functions in pyCacheBack
+# override the backing functions in pyCacheBack
     class my_cache(pyCacheBack):
         def _put_to_back(self, key, value):
-	    # key (x, y) saves as file <dir>/x/y
-	    (x, y) = key
-	    dir_path = os.path.join(test_dir, str(x))
-	    try:
-	        os.mkdir(dir_path)
-	    except OSError:
-	        pass
-	    file_path = os.path.join(dir_path, str(y))
-	    with open(file_path, 'wb') as f:
-	        f.write(str(value))
+            # key (x, y) saves as file <dir>/x/y
+            (x, y) = key
+            dir_path = os.path.join(test_dir, str(x))
+            try:
+                os.mkdir(dir_path)
+            except OSError:
+                pass
+            file_path = os.path.join(dir_path, str(y))
+            with open(file_path, 'wb') as f:
+                f.write(str(value))
 
         def _get_from_back(self, key):
-	    (x, y) = key
-	    file_path = os.path.join(test_dir, str(x), str(y))
-	    try:
-	        with open(file_path, 'rb') as f:
-		    value = f.read()
+            (x, y) = key
+            file_path = os.path.join(test_dir, str(x), str(y))
+            try:
+                with open(file_path, 'rb') as f:
+                    value = f.read()
             except IOError:
                 raise KeyError, str(key)
             return value
 ```
 
-Note that if any translation of an object is required before writing to disk is
-required the `_put_to_back()` method must do this.
+Note that if any translation of an object is required before writing to disk
+the `_put_to_back()` method must do this.
 Similarly, the `_get_from_back()` method must reconstruct the in-memory
 representation.
 
