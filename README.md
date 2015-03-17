@@ -72,12 +72,12 @@ representation.
 
 In a real zoomable tiled map display we would actually have a key that also
 contains the zoom level.  We leave this out in the code above so the example
-is simple.
+is simple.  It's not hard to add into the above code.
 
 ###Notes
 
-When this is used to cache things like OSM map tiles we should have some method
-of *aging* tiles so we pick up tiles that might change.  This could be an
-external batch process which might just delete older tiles in the on-disk cache,
-or it could check for changes in the OSM tile repository and update or delete
-only out of date local tiles.
+Since things like OpenStreetMap tiles are crowd-edited we should have some
+method of *aging* tiles so we pick up OSM tiles that might have changed.
+This could be an external batch process which might just delete older tiles
+in the on-disk cache, or it could check for changes in the OSM tile repository
+and update or delete only out of date local tiles.
