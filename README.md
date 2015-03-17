@@ -23,7 +23,8 @@ To use just the in-memory cache part of `pyCacheBack`, do this:
     # etc
 ```
 
-Note that no backing store is used in the above example, it's just an in-memory cache.
+Note that no backing store is used in the above example, it's just an in-memory
+cache with an LRU mechanism to limit memory usage.
 
 ###Using `pyCacheBack` with an on-disk persistent cache
 
