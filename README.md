@@ -41,28 +41,28 @@ from pycacheback import pyCacheBack
 test_dir = './test_dir'
 
 # override the backing functions in pyCacheBack
-    class my_cache(pyCacheBack):
-        def _put_to_back(self, key, value):
-            # key (x, y) saves as file <dir>/x/y
-            (x, y) = key
-            dir_path = os.path.join(test_dir, str(x))
-            try:
-                os.mkdir(dir_path)
-            except OSError:
-                pass
-            file_path = os.path.join(dir_path, str(y))
-            with open(file_path, 'wb') as f:
-                f.write(str(value))
+class my_cache(pyCacheBack):
+    def _put_to_back(self, key, value):
+       # key (x, y) saves as file <dir>/x/y
+        (x, y) = key
+        dir_path = os.path.join(test_dir, str(x))
+        try:
+            os.mkdir(dir_path)
+        except OSError:
+            pass
+        file_path = os.path.join(dir_path, str(y))
+        with open(file_path, 'wb') as f:
+            f.write(str(value))
 
-        def _get_from_back(self, key):
-            (x, y) = key
-            file_path = os.path.join(test_dir, str(x), str(y))
-            try:
-                with open(file_path, 'rb') as f:
-                    value = f.read()
-            except IOError:
-                raise KeyError, str(key)
-            return value
+    def _get_from_back(self, key):
+        (x, y) = key
+        file_path = os.path.join(test_dir, str(x), str(y))
+        try:
+            with open(file_path, 'rb') as f:
+                value = f.read()
+        except IOError:
+            raise KeyError, str(key)
+        return value
 ```
 
 Note that the in-memory representation of the thing we are caching may not be
