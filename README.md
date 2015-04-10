@@ -23,6 +23,7 @@ class.
 To use just the in-memory cache part of `pyCacheBack`, do this:
 ``` python
 import pycacheback
+
 my_cache = pycacheback.pyCacheBack()
 
 my_cache['key'] = 'value'
@@ -38,6 +39,7 @@ arbitrarily set at 1000 by default.  You can change the maximum number of items
 when you create a `pyCacheBack` instance:
 ``` python
 import pycacheback
+
 my_cache = pycacheback.pyCacheBack(max_lru=100000)
 ```
 
@@ -55,10 +57,10 @@ The overridden methods must create the backing file from the _key_ and _value_
 objects and return the _value_ given the _key_:
 
 ``` python
+import pickle
 from pycacheback import pyCacheBack
 
 # override the backing functions in pyCacheBack
-import pickle
 
 class my_cache(pyCacheBack):
     def _put_to_back(self, key, value):
@@ -79,7 +81,7 @@ class my_cache(pyCacheBack):
         file_path = os.path.join(_tiles_dir, str(x), str(y))
         try:
             with open(file_path, 'rb') as f:
-                value = pickle.load(fd)
+                value = pickle.load(f)
         except IOError:
             raise KeyError, str(key)
         return value
@@ -88,7 +90,7 @@ class my_cache(pyCacheBack):
 Now when we create an instance of the `my_cache` class we specify the tile
 directory we want to use, along with an optional LRU maximum limit:
 ```python
-    backing_cache = my_cache(tiles_dir='./tiles', max_lru=100)
+backing_cache = my_cache(tiles_dir='./tiles', max_lru=100)
 ```
 
 Note that the in-memory representation of the thing we are caching may not be
