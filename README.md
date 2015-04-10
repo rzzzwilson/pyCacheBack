@@ -58,6 +58,8 @@ objects and return the _value_ given the _key_:
 from pycacheback import pyCacheBack
 
 # override the backing functions in pyCacheBack
+import pickle
+
 class my_cache(pyCacheBack):
     def _put_to_back(self, key, value):
        # note that self._tiles_dir is the saved directory from the constructor
@@ -70,14 +72,14 @@ class my_cache(pyCacheBack):
             pass
         file_path = os.path.join(dir_path, str(y))
         with open(file_path, 'wb') as f:
-            f.write(str(value))
+            pickle.dump(value, f)
 
     def _get_from_back(self, key):
         (x, y) = key
         file_path = os.path.join(_tiles_dir, str(x), str(y))
         try:
             with open(file_path, 'rb') as f:
-                value = f.read()
+                value = pickle.load(fd)
         except IOError:
             raise KeyError, str(key)
         return value
@@ -93,8 +95,9 @@ Note that the in-memory representation of the thing we are caching may not be
 writable to disk in the in-memory form.  If any translation of an object is
 required before writing to disk the `_put_to_back()` method must do this.
 Similarly, the `_get_from_back()` method must reconstruct the in-memory
-representation from the on-disk data.  The example above is crude and probably
-isn't what you need.
+representation from the on-disk data.  In the example above we used a simple
+pickle/unpickle process.  Any method of writing to disk and reconstructing
+the saved object is fine.
 
 In a real zoomable tiled map display we would actually have a key that also
 contains the zoom level.  We leave this out in the code above so the example
