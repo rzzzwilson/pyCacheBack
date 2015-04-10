@@ -86,7 +86,7 @@ class my_cache(pyCacheBack):
 Now when we create an instance of the `my_cache` class we specify the tile
 directory we want to use, along with an optional LRU maximum limit:
 ```python
-    backing_cache = my_cache(tile_dir='./tiles', max_lru=100)
+    backing_cache = my_cache(tiles_dir='./tiles', max_lru=100)
 ```
 
 Note that the in-memory representation of the thing we are caching may not be
