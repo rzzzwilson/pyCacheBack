@@ -33,6 +33,18 @@ my_value = my_cache['key']
 Note that no backing store is used in the above example, it's just an in-memory
 cache with an LRU mechanism to limit memory usage.
 
+The dictionary can contain a maximum number of items.  This limit is rather
+arbitrarily set at 1000 by default.  You can change the maximum number of items
+when you create a `pyCacheBack` instance:
+``` python
+import pycacheback
+my_cache = pycacheback.pyCacheBack(max_lru=100000)
+```
+
+If you put more than the limit of items into a `pyCacheBack` instance the
+number of items will be maintained at no more than the `max_lru` limit
+by deleting older items.
+
 ####Using `pyCacheBack` with an on-disk persistent cache
 
 If you want the persistent on-disk cache, you must create your own class
@@ -45,14 +57,13 @@ objects and return the _value_ given the _key_:
 ``` python
 from pycacheback import pyCacheBack
 
-test_dir = './test_dir'
-
 # override the backing functions in pyCacheBack
 class my_cache(pyCacheBack):
     def _put_to_back(self, key, value):
+       # note that self._tiles_dir is the saved directory from the constructor
        # key (x, y) saves as file <dir>/x/y
         (x, y) = key
-        dir_path = os.path.join(test_dir, str(x))
+        dir_path = os.path.join(_tiles_dir, str(x))
         try:
             os.mkdir(dir_path)
         except OSError:
@@ -63,7 +74,7 @@ class my_cache(pyCacheBack):
 
     def _get_from_back(self, key):
         (x, y) = key
-        file_path = os.path.join(test_dir, str(x), str(y))
+        file_path = os.path.join(_tiles_dir, str(x), str(y))
         try:
             with open(file_path, 'rb') as f:
                 value = f.read()
@@ -72,11 +83,18 @@ class my_cache(pyCacheBack):
         return value
 ```
 
+Now when we create an instance of the `my_cache` class we specify the tile
+directory we want to use, along with an optional LRU maximum limit:
+```python
+    backing_cache = my_cache(tile_dir='./tiles', max_lru=100)
+```
+
 Note that the in-memory representation of the thing we are caching may not be
 writable to disk in the in-memory form.  If any translation of an object is
 required before writing to disk the `_put_to_back()` method must do this.
 Similarly, the `_get_from_back()` method must reconstruct the in-memory
-representation from the on-disk data.
+representation from the on-disk data.  The example above is crude and probably
+isn't what you need.
 
 In a real zoomable tiled map display we would actually have a key that also
 contains the zoom level.  We leave this out in the code above so the example
@@ -91,7 +109,7 @@ in the on-disk cache, or it could check for changes in the OSM tile repository
 and update or delete only out of date local tiles.
 Alternatively, we could modify the code that retrieves tiles from the on-disk
 cache to check the saved tile date and retrieve the 'net tile again if the tile
-is older than a set date.  The existing on-disk tile would be returned as the 
+is older than a set date.  The existing on-disk tile would be returned as the
 found tile.  If the tile retrieved from the 'net is different from the on-disk
 copy we could use the 'callback' mechanism to update the user-visible display.
 
