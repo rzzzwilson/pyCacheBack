@@ -13,6 +13,13 @@ in-memory cache has an LRU mechanism but the on-disk cache is infinite.
 
 ###Using `pyCacheBack`
 
+If you don't extend the `pyCacheBack` class any objects created from the class
+will behave like a dictionary with an LRU size-limiting mechanism.  If you
+want to use the on-disk backing store feature you must extend the `pyCacheBack`
+class.
+
+####An in-memory `pyCacheBack`
+
 To use just the in-memory cache part of `pyCacheBack`, do this:
 ``` python
 import pycacheback
@@ -26,7 +33,7 @@ my_value = my_cache['key']
 Note that no backing store is used in the above example, it's just an in-memory
 cache with an LRU mechanism to limit memory usage.
 
-###Using `pyCacheBack` with an on-disk persistent cache
+####Using `pyCacheBack` with an on-disk persistent cache
 
 If you want the persistent on-disk cache, you must create your own class
 inheriting from `pyCacheBack` and override the `_put_to_back()` and
