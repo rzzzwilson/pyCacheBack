@@ -104,22 +104,3 @@ the saved object is fine.
 In a real zoomable tiled map display we would actually have a key that also
 contains the zoom level.  We leave this out in the code above so the example
 is simple.
-
-###Notes
-
-Since things like OpenStreetMap tiles are crowd-edited we should have some
-method of *aging* tiles so we pick up OSM tiles that might have changed.
-This could be an external batch process which might just delete older tiles
-in the on-disk cache, or it could check for changes in the OSM tile repository
-and update or delete only out of date local tiles.
-
-Alternatively, we could modify the code that retrieves tiles from the on-disk
-cache to check the saved tile date and retrieve the 'net tile again if the tile
-is older than a set date.  The *existing* on-disk tile would be returned as the
-found tile.  If the tile retrieved from the 'net is different from the on-disk
-copy we could use the pySlip 'callback' mechanism to update the user-visible
-display.
-
-Similarly, if we want an on-disk LRU mechanism to control disk usage we
-could have a periodic batch job checking disk usage which deletes older on-disk
-tiles.
