@@ -67,7 +67,7 @@ class my_cache(pyCacheBack):
        # note that self._tiles_dir is the saved directory from the constructor
        # key (x, y) saves as file <dir>/x/y
         (x, y) = key
-        dir_path = os.path.join(_tiles_dir, str(x))
+        dir_path = os.path.join(self._tiles_dir, str(x))
         try:
             os.mkdir(dir_path)
         except OSError:
@@ -78,7 +78,7 @@ class my_cache(pyCacheBack):
 
     def _get_from_back(self, key):
         (x, y) = key
-        file_path = os.path.join(_tiles_dir, str(x), str(y))
+        file_path = os.path.join(self._tiles_dir, str(x), str(y))
         try:
             with open(file_path, 'rb') as f:
                 value = pickle.load(f)
