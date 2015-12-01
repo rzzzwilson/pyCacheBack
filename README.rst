@@ -59,9 +59,9 @@ Using pyCacheBack with an on-disk persistent cache
 If you want the persistent on-disk cache, you must create your own class
 inheriting from **pyCacheBack** and override the ``_put_to_back()`` and
 ``_get_from_back()`` methods.  In this example we assume the key has the form
-_(x, y)_ and we store the value in a file _x/y_ under a known directory.
-The overridden methods must create the backing file from the _key_ and _value_
-objects and return the _value_ given the _key_:
+``(x, y)`` and we store the value in a file ``x/y`` under a known directory.
+The overridden methods must create the backing file from the ``key`` and
+``value`` objects and return the ``value`` given the ``key``:
 
 ::
 
