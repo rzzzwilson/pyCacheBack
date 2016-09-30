@@ -15,13 +15,13 @@ class pyCacheBack(dict):
     # default maximum number of key/value pairs for pyCacheBack
     DefaultMaxLRU = 1000
 
-    # default path to tiles directory
-    DefaultTilesDir = 'tiles'
+    # default path to backing store directory
+    DefaultBackingDir = 'backing_dir'
 
     def __init__(self, *args, **kwargs):
         self._lru_list = []
         self._max_lru = kwargs.pop('max_lru', self.DefaultMaxLRU)
-        self._tiles_dir = kwargs.pop('tiles_dir', self.DefaultTilesDir)
+        self._backing_dir = kwargs.pop('backing_dir', self.DefaultBackingDir)
         super(pyCacheBack, self).__init__(*args, **kwargs)
 
     def __getitem__(self, key):

@@ -188,7 +188,7 @@ class TestpyCacheBack(unittest.TestCase):
         class my_cache(pyCacheBack):
             def _put_to_back(self, key, value):
                 (x, y) = key
-                dir_path = os.path.join(self._tiles_dir, str(x))
+                dir_path = os.path.join(self._backing_dir, str(x))
                 try:
                     os.mkdir(dir_path)
                 except OSError:
@@ -199,7 +199,7 @@ class TestpyCacheBack(unittest.TestCase):
 
             def _get_from_back(self, key):
                 (x, y) = key
-                file_path = os.path.join(self._tiles_dir, str(x), str(y))
+                file_path = os.path.join(self._backing_dir, str(x), str(y))
                 try:
                     with open(file_path, 'rb') as f:
                         value = f.read()
@@ -218,7 +218,7 @@ class TestpyCacheBack(unittest.TestCase):
                           % (expected_contents, file_contents))
 
         # OK, test it
-        a = my_cache(tiles_dir=test_dir, max_lru=2)
+        a = my_cache(backing_dir=test_dir, max_lru=2)
         a[(1,1)] = 'one and one'
         a[(1,2)] = 'one and two'
         a[(1,1)] = 'one and one, second value'  # redefine (1,1) value
