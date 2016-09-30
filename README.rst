@@ -6,7 +6,8 @@ A python in-memory cache with on-disk backing store.
 In the pySlip application we have a python application that displays a map
 using ``OpenStreetMap`` tiles.  The way to get some speed in this sort of
 application is to keep an in-memory cache of tiles.  We also implement an
-LRU mechanism to keep memory usage under control.
+LRU mechanism (https://en.wikipedia.org/wiki/Cache_algorithms#LRU) to keep
+memory usage under control.
 
 This has a problem when we restart the application as we have to refetch
 the tiles that were in the in-memory cache that has gone away.  The smart
@@ -16,15 +17,15 @@ in-memory cache has an LRU mechanism but the on-disk cache is infinite.
 Using pyCacheBack
 -----------------
 
-If you don't extend the **pyCacheBack** class any objects created from the class
+If you don't extend the `pyCacheBack` class any objects created from the class
 will behave like a dictionary with an LRU size-limiting mechanism.  If you
-want to use the on-disk backing store feature you must extend the **pyCacheBack**
+want to use the on-disk backing store feature you must extend the `pyCacheBack`
 class.
 
 An in-memory pyCacheBack
 ------------------------
 
-To use just the in-memory cache part of **pyCacheBack**, do this:
+To use just the in-memory cache part of `pyCacheBack`, do this:
 
 ::
 
@@ -41,7 +42,7 @@ cache with an LRU mechanism to limit memory usage.
 
 The dictionary can contain a maximum number of items.  This limit is rather
 arbitrarily set at 1000 by default.  You can change the maximum number of items
-when you create a **pyCacheBack** instance:
+when you create a `pyCacheBack` instance:
 
 ::
 
@@ -49,7 +50,7 @@ when you create a **pyCacheBack** instance:
     
     my_cache = pycacheback.pyCacheBack(max_lru=100000)
 
-If you put more than the limit of items into a **pyCacheBack** instance the
+If you put more than the limit of items into a `pyCacheBack` instance the
 number of items will be maintained at no more than the ``max_lru`` limit
 by deleting older items.
 
@@ -57,7 +58,7 @@ Using pyCacheBack with an on-disk persistent cache
 --------------------------------------------------
 
 If you want the persistent on-disk cache, you must create your own class
-inheriting from **pyCacheBack** and override the ``_put_to_back()`` and
+inheriting from `pyCacheBack` and override the ``_put_to_back()`` and
 ``_get_from_back()`` methods.  In this example we assume the key has the form
 ``(x, y)`` and we store the value in a file ``x/y`` under a known directory.
 The overridden methods must create the backing file from the ``key`` and
