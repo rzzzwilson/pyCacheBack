@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 """
 An extended dictionary offering limited LRU entries in the dictionary
@@ -22,7 +21,7 @@ class pyCacheBack(dict):
         self._lru_list = []
         self._max_lru = kwargs.pop('max_lru', self.DefaultMaxLRU)
         self._backing_dir = kwargs.pop('backing_dir', self.DefaultBackingDir)
-        super(pyCacheBack, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def __getitem__(self, key):
         if key in self:
