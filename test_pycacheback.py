@@ -62,27 +62,27 @@ class TestpyCacheBack(unittest.TestCase):
                % str(a.get(10, 'NONE')))
         self.assertEqual(a.get(10, 'NONE'), 'NONE', msg)
 
-        msg = "a.has_key(2) should return True, got %s" % str(a.has_key(2))
-        self.assertTrue(a.has_key(2), msg)
+        msg = "a.has_key(2) should return True, got %s" % str(2 in a)
+        self.assertTrue(2 in a, msg)
 
         msg = ("a.has_key(10) should return False, got %s"
-               % str(a.has_key(10)))
-        self.assertFalse(a.has_key(10), msg)
+               % str(10 in a))
+        self.assertFalse(10 in a, msg)
 
         msg = ("a.items() should return [(1, 'one'), (2, '2'), (3, 3), "
                "('4', 'four')], got %s" % str(a.items()))
         self.assertEqual([(1, 'one'), (2, '2'), (3, 3), ('4', 'four')],
-                         a.items(), msg)
+                         list(a.items()), msg)
 
         msg = "a.keys() should return [1, 2, 3, '4'], got %s" % str(a.keys())
-        self.assertEqual([1, 2, 3, '4'], a.keys(), msg)
+        self.assertEqual([1, 2, 3, '4'], list(a.keys()), msg)
 
         msg = "a.keys() should return [1, 2, 3, '4'], got %s" % str(a.keys())
-        self.assertEqual([1, 2, 3, '4'], a.keys(), msg)
+        self.assertEqual([1, 2, 3, '4'], list(a.keys()), msg)
 
         msg = ("a.values() should return ['one', '2', 3, 'four'], got %s"
                % str(a.values()))
-        self.assertEqual(['one', '2', 3, 'four'], a.values(), msg)
+        self.assertEqual(['one', '2', 3, 'four'], list(a.values()), msg)
 
         result = a.setdefault(10, 'TEN')
         msg = "a.setdefault(10, 'TEN') doesn't return 'TEN'?"
@@ -114,7 +114,7 @@ class TestpyCacheBack(unittest.TestCase):
         b = {'TEN': 10}
         a.update(b)
         msg = "a.keys() should return ['TEN'], got %s" % str(a.keys())
-        self.assertEqual(a.keys(), ['TEN'], msg)
+        self.assertEqual(list(a.keys()), ['TEN'], msg)
 
     def testLRU(self):
         """Test the LRU mechanism."""
@@ -195,7 +195,7 @@ class TestpyCacheBack(unittest.TestCase):
                     pass
                 file_path = os.path.join(dir_path, str(y))
                 with open(file_path, 'wb') as f:
-                    f.write(str(value))
+                    f.write(bytes(value, encoding='utf-8'))
 
             def _get_from_back(self, key):
                 (x, y) = key
@@ -204,7 +204,7 @@ class TestpyCacheBack(unittest.TestCase):
                     with open(file_path, 'rb') as f:
                         value = f.read()
                 except IOError:
-                    raise KeyError, str(key)
+                    raise KeyError(str(key))
                 return value
 
         # define utility testing function
@@ -212,9 +212,9 @@ class TestpyCacheBack(unittest.TestCase):
             if not os.path.isfile(file_path):
                 self.fail("File %s doesn't exist!?" % file_path)
             with open(file_path, 'rb') as f:
-                file_contents = f.read()
+                file_contents = f.read().decode("utf-8")
             if file_contents != expected_contents:
-                self.fail("Expected file contents %s, got %s"
+                self.fail("Expected file contents '%s', got '%s'"
                           % (expected_contents, file_contents))
 
         # OK, test it
@@ -285,11 +285,11 @@ class TestpyCacheBack(unittest.TestCase):
     def testHasKey(self):
         kv_list = [(1, 'one'), (2, 2), (3, 3.0)]
         a = pyCacheBack(kv_list, max_lru=10)
-        msg = ".has_key(1) should return True, got '%s'" % str(a.has_key(1))
-        self.assertEqual(a.has_key(1), True, msg)
+        msg = ".has_key(1) should return True, got '%s'" % str(1 in a) #a.has_key(1))
+        self.assertEqual(1 in a, True, msg)
         msg = (".has_key(100) should return False, got '%s'"
-               % str(a.has_key(100)))
-        self.assertEqual(a.has_key(100), False, msg)
+               % str(100 in a))
+        self.assertEqual(100 in a, False, msg)
 
         self.assertEqual(1 in a, True, msg)
 
@@ -304,7 +304,7 @@ class TestpyCacheBack(unittest.TestCase):
     def testItems(self):
         kv_list = [(1, 'one'), (2, 2), (3, 3.0)]
         a = pyCacheBack(kv_list, max_lru=10)
-        for i, x in enumerate(a.iteritems()):
+        for i, x in enumerate(a.items()):
             msg = (".iteritems() item %d should be '%s', got '%s'"
                    % (i, str(kv_list[i]), str(x)))
             self.assertEqual(kv_list[i], x, msg)
@@ -322,7 +322,7 @@ class TestpyCacheBack(unittest.TestCase):
         a = pyCacheBack(kv_list, max_lru=10)
         k_list = [x[0] for x in kv_list]
         msg = ".keys() should be '%s', got '%s'" % (str(k_list), str(a.keys()))
-        self.assertEqual(k_list, a.keys(), msg)
+        self.assertEqual(k_list, list(a.keys()), msg)
 
     def testPop(self):
         kv_list = [(1, 'one'), (2, 2), (3, 3.0)]
@@ -390,7 +390,7 @@ class TestpyCacheBack(unittest.TestCase):
         expected_values = [kv[1] for kv in kv_list]
         msg = (".values should return '%s', got '%s'"
                % (str(expected_values), str(a.values())))
-        self.assertEqual(expected_values, a.values(), msg)
+        self.assertEqual(expected_values, list(a.values()), msg)
 
 
 unittest.main()
